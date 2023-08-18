@@ -14,5 +14,5 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = InventoryManagement
-build_property.ProjectDir = c:\Users\Jean\Desktop\Github\InventoryManagement\
+build_property.ProjectDir = C:\Users\Jean\Desktop\Github\InventoryManagement\
 build_property.EnableComHosting = 
