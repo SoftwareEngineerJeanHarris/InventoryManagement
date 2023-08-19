@@ -14,6 +14,8 @@ namespace InventoryManagement
         TextBox txtFirstName;
         TextBox txtLastName;
         TextBox txtEmail;
+        TextBox txtUsernameLogin;
+        TextBox txtPasswordLogin;
 
         public Login()
         {
@@ -40,10 +42,10 @@ namespace InventoryManagement
             Label lblLoginAccount = new Label { Text = "Login", Width = 150, Location = new System.Drawing.Point(10, 10), Font = new System.Drawing.Font(Font.FontFamily, Font.Size + 2) };
 
             Label lblUsernameLogin = new Label { Text = "Username:",  Width = 150, Location = new System.Drawing.Point(10, 45) };
-            TextBox txtUsernameLogin = new TextBox { Location = new System.Drawing.Point(10, 65),  Width = 150 };
+            txtUsernameLogin = new TextBox { Location = new System.Drawing.Point(10, 65),  Width = 150 };
 
             Label lblPasswordLogin = new Label { Text = "Password:",  Width = 150, Location = new System.Drawing.Point(10, 95) };
-            TextBox txtPasswordLogin = new TextBox { Location = new System.Drawing.Point(10, 115), PasswordChar = '*',  Width = 150 };
+            txtPasswordLogin = new TextBox { Location = new System.Drawing.Point(10, 115), PasswordChar = '*',  Width = 150 };
 
             Button btnLogin = new Button { Text = "Login",  Width = 150, Height = 40, Location = new System.Drawing.Point(10, 155) };
             btnLogin.Click += BtnLogin_Click; // Event handler for login button click
@@ -78,7 +80,35 @@ namespace InventoryManagement
 
         private void BtnLogin_Click(object sender, EventArgs e)
         {
-            // Login logic goes here
+            string username = txtUsernameLogin.Text;
+            string password = txtPasswordLogin.Text;
+
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                string query = "SELECT * FROM inventoryManagementUsers WHERE Username = @username AND Password = @password";
+                using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@password", password);
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            // Open the next form
+                            InventoryManager mainForm = new InventoryManager(username); // Pass the username to the next form if needed
+                            mainForm.Show();
+
+                            // Hide the login form
+                            this.Hide();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Invalid username or password!");
+                        }
+                    }
+                }
+            }
         }
 
         private void BtnCreateAccount_Click(object sender, EventArgs e)
